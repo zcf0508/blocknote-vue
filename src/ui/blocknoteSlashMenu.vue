@@ -15,6 +15,14 @@ const reference = ref<{getBoundingClientRect: () => DOMRect} | null>(null);
 
 const show = ref(false);
 
+const delayShow = ref(false);
+
+watch(show, () => {
+  setTimeout(() => {
+    delayShow.value = show.value;
+  }, 100);
+});
+
 const { floatingStyles, update } = useFloating(reference, slashMenuRef, {
   open: show,
   placement: 'right-start',
@@ -83,7 +91,7 @@ onUnmounted(() => {
 
 <template>
   <ul
-    v-show="show"
+    v-show="delayShow"
     ref="slashMenuRef"
     :style="floatingStyles"
     class="
@@ -96,7 +104,13 @@ onUnmounted(() => {
   >
     <li v-for="(item, index) in filteredItems" :key="item.name" tabindex="0">
       <button
-        class="w-full p-2 bg-transparent  border-none rounded-md text-left transition-all"
+        class="
+          w-full p-2 
+          bg-transparent hover:bg-gray-200! 
+          border-none rounded-md 
+          text-left transition-all
+          cursor-pointer
+        "
         :class="{
           'bg-gray-200!': selectedIndex === index,
         }"

@@ -7,18 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    DropdownMenuArrow: typeof import('radix-vue')['DropdownMenuArrow']
-    DropdownMenuContent: typeof import('radix-vue')['DropdownMenuContent']
-    DropdownMenuItem: typeof import('radix-vue')['DropdownMenuItem']
-    DropdownMenuPortal: typeof import('radix-vue')['DropdownMenuPortal']
-    DropdownMenuRoot: typeof import('radix-vue')['DropdownMenuRoot']
-    DropdownMenuTrigger: typeof import('radix-vue')['DropdownMenuTrigger']
-    PopoverArrow: typeof import('radix-vue')['PopoverArrow']
-    PopoverClose: typeof import('radix-vue')['PopoverClose']
-    PopoverContent: typeof import('radix-vue')['PopoverContent']
-    PopoverPortal: typeof import('radix-vue')['PopoverPortal']
-    PopoverRoot: typeof import('radix-vue')['PopoverRoot']
-    PopoverTrigger: typeof import('radix-vue')['PopoverTrigger']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
