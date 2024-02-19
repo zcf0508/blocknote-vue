@@ -36,9 +36,20 @@ if (parentElement) {
     filteredItems.value = slashMenuState.filteredItems;
     selectedIndex.value = slashMenuState.keyboardHoveredItemIndex;
 
+    const blockGroupElement = parentElement.querySelector('.bn-block-group');
+    
     reference.value = {
       getBoundingClientRect() {
-        return slashMenuState.referencePos;
+        if (slashMenuState.referencePos.width == blockGroupElement?.clientWidth) {
+          return new DOMRect(
+            slashMenuState.referencePos.x,
+            slashMenuState.referencePos.y * 2,
+            0,
+            slashMenuState.referencePos.height,
+          );
+        } else {
+          return slashMenuState.referencePos;
+        }
       },
     };
 
