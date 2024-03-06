@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { flip, useFloating } from '@floating-ui/vue';
-import type { BlockNoteEditor } from '@blocknote/core';
-import { getDefaultSlashMenuItems } from '@blocknote/core';
+import type { BlockNoteEditor, DefaultSuggestionItem } from '@blocknote/core';
+import { filterSuggestionItems, getDefaultSlashMenuItems } from '@blocknote/core';
 
 const props = defineProps({
   editor: {
@@ -20,6 +20,7 @@ const reference = ref<{ getBoundingClientRect: () => DOMRect } | null>(null);
 
 const show = ref(false);
 
+/** avoid click event not working */
 const delayShow = ref(false);
 
 watch(show, () => {
@@ -38,15 +39,27 @@ const { floatingStyles, update } = useFloating(reference, slashMenuRef, {
 
 const { editor } = toRefs(props);
 
-const filteredItems = ref(getDefaultSlashMenuItems(props.editor));
+const query = ref<string>();
+const items = computed(() => {
+  return filterSuggestionItems(
+    getDefaultSlashMenuItems(props.editor),
+    query.value || '',
+  );
+});
 const selectedIndex = ref(0);
+
+function onItemClick(item: DefaultSuggestionItem) {
+  editor.value.suggestionMenus.closeMenu();
+  editor.value.suggestionMenus.clearQuery();
+  item.onItemClick();
+}
 
 function handleMenuNavigationKeys(event: KeyboardEvent) {
   if (event.key === 'ArrowUp') {
     event.preventDefault();
 
-    if (filteredItems.value.length) {
-      selectedIndex.value = (selectedIndex.value - 1 + filteredItems.value!.length) % filteredItems.value!.length;
+    if (items.value.length) {
+      selectedIndex.value = (selectedIndex.value - 1 + items.value!.length) % items.value!.length;
     }
 
     return true;
@@ -55,8 +68,8 @@ function handleMenuNavigationKeys(event: KeyboardEvent) {
   if (event.key === 'ArrowDown') {
     event.preventDefault();
 
-    if (filteredItems.value.length) {
-      selectedIndex.value = (selectedIndex.value + 1) % filteredItems.value!.length;
+    if (items.value.length) {
+      selectedIndex.value = (selectedIndex.value + 1) % items.value!.length;
     }
 
     return true;
@@ -65,11 +78,9 @@ function handleMenuNavigationKeys(event: KeyboardEvent) {
   if (event.key === 'Enter') {
     event.preventDefault();
 
-    if (filteredItems.value.length) {
-      const item = filteredItems.value[selectedIndex.value];
-      editor.value.suggestionMenus.closeMenu();
-      editor.value.suggestionMenus.clearQuery();
-      item.onItemClick();
+    if (items.value.length) {
+      const item = items.value[selectedIndex.value];
+      onItemClick(item);
     }
 
     return true;
@@ -86,20 +97,21 @@ function handleMenuNavigationKeys(event: KeyboardEvent) {
   return false;
 }
 
-onMounted(() => {
-  props.parentElement.addEventListener(
-    'keydown',
-    handleMenuNavigationKeys,
-    true,
-  );
-});
-
-onUnmounted(() => {
-  props.parentElement.removeEventListener(
-    'keydown',
-    handleMenuNavigationKeys,
-    true,
-  );
+watch(delayShow, () => {
+  if (delayShow.value) {
+    props.parentElement.addEventListener(
+      'keydown',
+      handleMenuNavigationKeys,
+      true,
+    );
+  }
+  else {
+    props.parentElement.removeEventListener(
+      'keydown',
+      handleMenuNavigationKeys,
+      true,
+    );
+  }
 });
 
 if (props.parentElement) {
@@ -125,6 +137,8 @@ if (props.parentElement) {
         }
       },
     };
+
+    query.value = SuggestionMenuState.query;
 
     show.value = SuggestionMenuState.show;
 
@@ -158,14 +172,14 @@ onUnmounted(() => {
     ref="slashMenuRef"
     :style="floatingStyles"
     class="
-      w-[200px] h-[225px] p-2 overflow-y-auto scroll-smooth
+      w-[200px] max-h-[225px] p-2 overflow-y-auto scroll-smooth
       bg-gray-100
       border border-solid border-gray-200 rounded-md
       flex flex-col gap-1
       list-none
     "
   >
-    <li v-for="(item, index) in filteredItems" :key="item.title" tabindex="0">
+    <li v-for="(item, index) in items" :key="item.title" tabindex="0">
       <button
         class="
           w-full p-2
@@ -177,7 +191,7 @@ onUnmounted(() => {
         :class="{
           'bg-gray-200!': selectedIndex === index,
         }"
-        @click="item.onItemClick()"
+        @click="onItemClick(item)"
       >
         {{ item.title }}
       </button>
