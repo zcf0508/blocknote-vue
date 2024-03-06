@@ -22,7 +22,7 @@ export default defineConfig({
     Components({
       extensions: ['vue'],
       deep: true,
-      dts:  true,
+      dts: true,
       resolvers: [],
     }),
     UnoCSS(),
@@ -39,12 +39,13 @@ export default defineConfig({
       fileName: (format) => {
         if (format === 'es') {
           return 'index.mjs';
-        } else {
+        }
+        else {
           return 'index.cjs';
         }
       },
     },
-    rollupOptions:{
+    rollupOptions: {
       external: ['vue'],
     },
   },

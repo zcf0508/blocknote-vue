@@ -8,17 +8,6 @@
 
 Vue interface for Blocknote
 
-> **Note**:
-> Replace `blocknote-vue`, `Vue interface for Blocknote` and `antfu` globally to use this template.
-
-## Sponsors
-
-<p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg">
-    <img src='https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg'/>
-  </a>
-</p>
-
 ## License
 
 [MIT](./LICENSE) License © 2023-PRESENT [Huali](https://github.com/zcf0508)

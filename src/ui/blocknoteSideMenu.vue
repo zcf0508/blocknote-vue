@@ -7,6 +7,10 @@ const props = defineProps({
     type: Object as PropType<BlockNoteEditor<any, any, any>>,
     required: true,
   },
+  parentElement: {
+    type: Object as PropType<HTMLElement>,
+    required: true,
+  },
 });
 
 const { editor } = toRefs(props);
@@ -15,7 +19,7 @@ const sideMenuRef = ref<HTMLDivElement>();
 
 const show = ref(false);
 
-const reference = ref<{getBoundingClientRect: () => DOMRect} | null>(null);
+const reference = ref<{ getBoundingClientRect: () => DOMRect } | null>(null);
 
 const { floatingStyles, update } = useFloating(reference, sideMenuRef, {
   open: show,
@@ -30,15 +34,15 @@ function clickHandler(e: Event) {
   editor.value.sideMenu.addBlock();
 }
 
-
-const parentElement = editor.value?.domElement.parentElement;
-if (parentElement) {
+if (props.parentElement) {
   editor.value.sideMenu.onUpdate((sideMenuState) => {
-    if(!sideMenuRef.value) return;
+    if (!sideMenuRef.value) {
+      return;
+    }
 
     nextTick(() => {
       plusRef.value?.addEventListener('click', clickHandler);
-      if(dragRef.value) {
+      if (dragRef.value) {
         dragRef.value.draggable = true;
         dragRef.value?.addEventListener('dragstart', editor.value.sideMenu.blockDragStart);
         dragRef.value?.addEventListener('dragend', editor.value.sideMenu.blockDragEnd);
@@ -53,12 +57,10 @@ if (parentElement) {
 
     show.value = sideMenuState.show;
 
-    
-    
-    if(!parentElement.contains(sideMenuRef.value)) {
-      parentElement.appendChild(sideMenuRef.value);
+    if (!props.parentElement.contains(sideMenuRef.value)) {
+      props.parentElement.appendChild(sideMenuRef.value);
     }
-    
+
     update();
   });
 }
@@ -80,7 +82,7 @@ onUnmounted(() => {
     :style="floatingStyles"
   >
     <span ref="plusRef" class="i-radix-icons:plus">
-    </span>  
+    </span>
     <span
       ref="dragRef"
       class="i-radix-icons:drag-handle-dots-2"

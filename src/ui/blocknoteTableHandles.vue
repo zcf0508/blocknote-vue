@@ -7,6 +7,10 @@ const props = defineProps({
     type: Object as PropType<BlockNoteEditor<any, any, any>>,
     required: true,
   },
+  parentElement: {
+    type: Object as PropType<HTMLElement>,
+    required: true,
+  },
 });
 
 const show = ref(false);
@@ -25,8 +29,8 @@ const mousePos = ref<number>();
 
 const rowReference = computed(() => {
   return {
-    getBoundingClientRect:() => {
-      if(draggedCellOrientation.value === 'row') {
+    getBoundingClientRect: () => {
+      if (draggedCellOrientation.value === 'row') {
         return new DOMRect(
           referencePosTable.value?.x,
           mousePos.value,
@@ -46,8 +50,8 @@ const rowReference = computed(() => {
 
 const colReference = computed(() => {
   return {
-    getBoundingClientRect:() => {
-      if(draggedCellOrientation.value === 'col') {
+    getBoundingClientRect: () => {
+      if (draggedCellOrientation.value === 'col') {
         return new DOMRect(
           mousePos.value,
           referencePosTable.value?.y,
@@ -86,37 +90,37 @@ const tableHandleRef = ref<HTMLDivElement>();
 
 const { editor } = toRefs(props);
 
-const parentElement = editor.value?.domElement.parentElement;
-if (parentElement) {
+if (props.parentElement) {
   editor.value.tableHandles!.onUpdate((state) => {
-    if(!tableHandleRef.value) return;
+    if (!tableHandleRef.value) {
+      return;
+    }
 
     show.value = state.show;
     rowIndex.value = state.rowIndex;
     colIndex.value = state.colIndex;
 
     nextTick(() => {
-      if(colHandleRef.value) {
+      if (colHandleRef.value) {
         colHandleRef.value.$el.draggable = true;
         colHandleRef.value.$el.addEventListener('dragstart', editor.value.tableHandles!.colDragStart);
         colHandleRef.value.$el.addEventListener('dragend', editor.value.tableHandles!.dragEnd);
       }
-      if(rowHandleRef.value) {
+      if (rowHandleRef.value) {
         rowHandleRef.value.$el.draggable = true;
         rowHandleRef.value.$el.addEventListener('dragstart', editor.value.tableHandles!.rowDragStart);
         rowHandleRef.value.$el.addEventListener('dragend', editor.value.tableHandles!.dragEnd);
       }
     });
 
-
     draggedCellOrientation.value = state.draggingState?.draggedCellOrientation;
     mousePos.value = state.draggingState?.mousePos;
-    
+
     referencePosCell.value = state.referencePosCell;
     referencePosTable.value = state.referencePosTable;
 
-    if(!parentElement.contains(tableHandleRef.value)) {
-      parentElement.appendChild(tableHandleRef.value);
+    if (!props.parentElement.contains(tableHandleRef.value)) {
+      props.parentElement.appendChild(tableHandleRef.value);
     }
 
     rowFloating.update();
@@ -130,7 +134,6 @@ onUnmounted(() => {
   colHandleRef.value?.$el.removeEventListener('dragend', editor.value.tableHandles!.dragEnd);
   rowHandleRef.value?.$el.removeEventListener('dragend', editor.value.tableHandles!.dragEnd);
 });
-
 </script>
 
 <template>
@@ -140,7 +143,7 @@ onUnmounted(() => {
         px-[1.5px]
         flex justify-center items-center
         bg-white text-gray-400 shadow-sm hover:bg-gray-300
-        border border-solid border-gray-100 rounded-md 
+        border border-solid border-gray-100 rounded-md
         cursor-pointer
       "
       draggable
