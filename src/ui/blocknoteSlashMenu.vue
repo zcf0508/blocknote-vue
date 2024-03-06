@@ -97,15 +97,18 @@ function handleMenuNavigationKeys(event: KeyboardEvent) {
   return false;
 }
 
-watch(delayShow, () => {
-  if (delayShow.value) {
+watch(show, (val) => {
+  if (val) {
     props.parentElement.addEventListener(
       'keydown',
       handleMenuNavigationKeys,
       true,
     );
   }
-  else {
+});
+
+watch(delayShow, (val) => {
+  if (!val) {
     props.parentElement.removeEventListener(
       'keydown',
       handleMenuNavigationKeys,
