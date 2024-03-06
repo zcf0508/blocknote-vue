@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { flip, useFloating } from '@floating-ui/vue';
+import { flip, offset, size, useFloating } from '@floating-ui/vue';
 import type { BlockNoteEditor, DefaultSuggestionItem } from '@blocknote/core';
 import { filterSuggestionItems, getDefaultSlashMenuItems } from '@blocknote/core';
 
@@ -20,7 +20,7 @@ const reference = ref<{ getBoundingClientRect: () => DOMRect } | null>(null);
 
 const show = ref(false);
 
-/** avoid click event not working */
+/** avoid menu item click event not working */
 const delayShow = ref(false);
 
 watch(show, () => {
@@ -33,7 +33,17 @@ const { floatingStyles, update } = useFloating(reference, slashMenuRef, {
   open: show,
   placement: 'right-start',
   middleware: [
+    offset(10),
+    // Flips the menu placement to maximize the space available, and prevents
+    // the menu from being cut off by the confines of the screen.
     flip(),
+    size({
+      apply({ availableHeight, elements }) {
+        Object.assign(elements.floating.style, {
+          maxHeight: `${availableHeight - 10}px`,
+        });
+      },
+    }),
   ],
 });
 
@@ -48,10 +58,13 @@ const items = computed(() => {
 });
 const selectedIndex = ref(0);
 
-function onItemClick(item: DefaultSuggestionItem) {
-  editor.value.suggestionMenus.closeMenu();
-  editor.value.suggestionMenus.clearQuery();
+function onItemClick(item: DefaultSuggestionItem, index?: number) {
+  if (index !== undefined && index >= 0) {
+    selectedIndex.value = index;
+  }
   item.onItemClick();
+  editor.value.suggestionMenus.clearQuery();
+  editor.value.suggestionMenus.closeMenu();
 }
 
 function handleMenuNavigationKeys(event: KeyboardEvent) {
@@ -117,6 +130,8 @@ watch(delayShow, (val) => {
   }
 });
 
+let lasetReferencePos: DOMRect;
+
 if (props.parentElement) {
   editor.value.suggestionMenus.onUpdate('/', (SuggestionMenuState) => {
     if (!slashMenuRef.value) {
@@ -125,21 +140,26 @@ if (props.parentElement) {
 
     const blockGroupElement = props.parentElement.querySelector('.bn-block-group');
 
-    reference.value = {
-      getBoundingClientRect() {
-        if (SuggestionMenuState.referencePos.width === blockGroupElement?.clientWidth) {
-          return new DOMRect(
-            SuggestionMenuState.referencePos.x,
-            SuggestionMenuState.referencePos.y * 2,
-            0,
-            SuggestionMenuState.referencePos.height,
-          );
-        }
-        else {
-          return SuggestionMenuState.referencePos;
-        }
-      },
-    };
+    if (lasetReferencePos !== SuggestionMenuState.referencePos) {
+      reference.value = {
+        getBoundingClientRect() {
+          if (SuggestionMenuState.referencePos.width === blockGroupElement?.clientWidth) {
+            return new DOMRect(
+              SuggestionMenuState.referencePos.x,
+              SuggestionMenuState.referencePos.y,
+              0,
+              SuggestionMenuState.referencePos.height,
+            );
+          }
+          else {
+            return SuggestionMenuState.referencePos;
+          }
+        },
+      };
+      lasetReferencePos = SuggestionMenuState.referencePos;
+
+      update();
+    }
 
     query.value = SuggestionMenuState.query;
 
@@ -148,8 +168,6 @@ if (props.parentElement) {
     if (!props.parentElement.contains(slashMenuRef.value)) {
       props.parentElement.appendChild(slashMenuRef.value);
     }
-
-    update();
   });
 }
 
@@ -194,7 +212,7 @@ onUnmounted(() => {
         :class="{
           'bg-gray-200!': selectedIndex === index,
         }"
-        @click="onItemClick(item)"
+        @click="onItemClick(item, index)"
       >
         {{ item.title }}
       </button>

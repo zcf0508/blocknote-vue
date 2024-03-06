@@ -1,12 +1,11 @@
 <script setup lang="ts">
-
+import 'blocknote-vue/style.css';
+import { BlocknoteView } from 'blocknote-vue';
 </script>
 
 <template>
   <div>
-    <ClientOnly>
-      <Editor></Editor>
-    </ClientOnly>
+    <BlocknoteView></BlocknoteView>
   </div>
 </template>
 
