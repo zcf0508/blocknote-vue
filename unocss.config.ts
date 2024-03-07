@@ -10,4 +10,7 @@ export default defineConfig({
       },
     }),
   ],
+  shortcuts: {
+    'btn-init': 'font-size-inherit p-0 bg-transparent border-0 text-inherit',
+  },
 });
