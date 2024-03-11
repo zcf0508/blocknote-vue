@@ -108,7 +108,10 @@ const colors = [
 
 const showTextColorPicker = computed(() => {
   if (currentBlock.value) {
-    return checkBlockTypeHasDefaultProp('textColor', currentBlock.value.type, editor.value) && checkBlockHasDefaultProp('textColor', currentBlock.value, editor.value);
+    return (
+      checkBlockTypeHasDefaultProp('textColor', currentBlock.value.type, editor.value)
+      && checkBlockHasDefaultProp('textColor', currentBlock.value, editor.value)
+    );
   }
   else {
     return false;
@@ -117,7 +120,10 @@ const showTextColorPicker = computed(() => {
 
 const showBackgroundColorPicker = computed(() => {
   if (currentBlock.value) {
-    return checkBlockTypeHasDefaultProp('backgroundColor', currentBlock.value.type, editor.value) && checkBlockHasDefaultProp('backgroundColor', currentBlock.value, editor.value);
+    return (
+      checkBlockTypeHasDefaultProp('backgroundColor', currentBlock.value.type, editor.value)
+      && checkBlockHasDefaultProp('backgroundColor', currentBlock.value, editor.value)
+    );
   }
   else {
     return false;
@@ -166,7 +172,13 @@ const showBackgroundColorPicker = computed(() => {
             </span>
           </DropdownMenuItem>
           <DropdownMenuSub v-if="showTextColorPicker || showBackgroundColorPicker">
-            <DropdownMenuSubTrigger class="p-1 rounded-md flex items-center justify-between cursor-pointer hover:bg-gray-200!">
+            <DropdownMenuSubTrigger
+              class="p-1 rounded-md
+                flex items-center justify-between
+                cursor-pointer
+                hover:bg-gray-200!
+              "
+            >
               <span role="button" class="flex items-center gap-2 cursor-pointer">
                 <span class="i-material-symbols:colors-rounded"></span>
                 <span>Colors</span>

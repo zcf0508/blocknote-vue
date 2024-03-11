@@ -171,7 +171,7 @@ if (props.parentElement) {
   });
 }
 
-function selectHandler(e: KeyboardEvent) {
+function selectHandler() {
   const li = slashMenuRef.value?.querySelectorAll('li')[selectedIndex.value];
   if (li) {
     li.scrollIntoView({ block: 'nearest' });
