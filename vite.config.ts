@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
-import RadixVueResolver from 'radix-vue/resolver'
+import RadixVueResolver from 'radix-vue/resolver';
 import UnoCSS from 'unocss/vite';
 import dts from 'vite-plugin-dts';
 
@@ -25,6 +25,7 @@ export default defineConfig({
       deep: true,
       dts: true,
       resolvers: [
+        // @ts-expect-error just work, ignore
         RadixVueResolver(),
       ],
     }),
