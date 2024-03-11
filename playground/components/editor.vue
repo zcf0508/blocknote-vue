@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { useBlocknote } from '../composables/useBlocknote';
-import BlocknoteSideMenu from './blocknoteSideMenu.vue';
-import BlocknoteSlashMenu from './blocknoteSlashMenu.vue';
-import BlocknoteTableHandles from './blocknoteTableHandles.vue';
+import 'blocknote-vue/style.css';
+import { BlocknoteSideMenu, BlocknoteSlashMenu, BlocknoteTableHandles, useBlocknote } from 'blocknote-vue';
 
 const editorRef = ref<HTMLElement>();
 const { blocknote } = useBlocknote(editorRef);
