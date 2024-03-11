@@ -46,12 +46,12 @@ if (props.parentElement) {
     }
 
     if (plusRef.value) {
-      plusRef.value.addEventListener('click', clickHandler);
+      useEventListener(plusRef, 'click', clickHandler);
     }
     if (dragRef.value) {
       dragRef.value.draggable = true;
-      dragRef.value.addEventListener('dragstart', editor.value.sideMenu.blockDragStart);
-      dragRef.value.addEventListener('dragend', editor.value.sideMenu.blockDragEnd);
+      useEventListener(dragRef, 'dragstart', editor.value.sideMenu.blockDragStart);
+      useEventListener(dragRef, 'dragend', editor.value.sideMenu.blockDragEnd);
     }
 
     if (lasetReferencePos !== sideMenuState.referencePos) {
@@ -74,13 +74,6 @@ if (props.parentElement) {
     }
   });
 }
-
-onUnmounted(() => {
-  plusRef.value?.removeEventListener('click', clickHandler);
-
-  dragRef.value?.removeEventListener('dragstart', editor.value.sideMenu.blockDragStart);
-  dragRef.value?.removeEventListener('dragend', editor.value.sideMenu.blockDragEnd);
-});
 
 const openMenu = ref(false);
 

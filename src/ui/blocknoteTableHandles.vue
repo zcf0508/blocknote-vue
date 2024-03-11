@@ -103,13 +103,13 @@ if (props.parentElement) {
     nextTick(() => {
       if (colHandleRef.value) {
         colHandleRef.value.$el.draggable = true;
-        colHandleRef.value.$el.addEventListener('dragstart', editor.value.tableHandles!.colDragStart);
-        colHandleRef.value.$el.addEventListener('dragend', editor.value.tableHandles!.dragEnd);
+        useEventListener(colHandleRef.value.$el, 'dragstart', editor.value.tableHandles!.colDragStart);
+        useEventListener(colHandleRef.value.$el, 'dragend', editor.value.tableHandles!.dragEnd);
       }
       if (rowHandleRef.value) {
         rowHandleRef.value.$el.draggable = true;
-        rowHandleRef.value.$el.addEventListener('dragstart', editor.value.tableHandles!.rowDragStart);
-        rowHandleRef.value.$el.addEventListener('dragend', editor.value.tableHandles!.dragEnd);
+        useEventListener(rowHandleRef.value.$el, 'dragstart', editor.value.tableHandles!.rowDragStart);
+        useEventListener(rowHandleRef.value.$el, 'dragend', editor.value.tableHandles!.dragEnd);
       }
     });
 
@@ -127,13 +127,6 @@ if (props.parentElement) {
     colFloating.update();
   });
 }
-
-onUnmounted(() => {
-  colHandleRef.value?.$el.removeEventListener('dragstart', editor.value.tableHandles!.colDragStart);
-  rowHandleRef.value?.$el.removeEventListener('dragstart', editor.value.tableHandles!.rowDragStart);
-  colHandleRef.value?.$el.removeEventListener('dragend', editor.value.tableHandles!.dragEnd);
-  rowHandleRef.value?.$el.removeEventListener('dragend', editor.value.tableHandles!.dragEnd);
-});
 </script>
 
 <template>

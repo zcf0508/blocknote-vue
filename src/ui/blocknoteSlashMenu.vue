@@ -178,13 +178,7 @@ function selectHandler() {
   }
 }
 
-onMounted(() => {
-  window.addEventListener('keydown', selectHandler);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', selectHandler);
-});
+useEventListener('keydown', selectHandler);
 </script>
 
 <template>
