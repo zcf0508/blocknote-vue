@@ -4,7 +4,7 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
 
-Vue interface for Blocknote
+Vue interface for [Blocknote](https://github.com/TypeCellOS/BlockNote)
 
 ## License
 
