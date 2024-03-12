@@ -9,10 +9,13 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+  "dependencies": {
+    "y-websocket": "^1.5.4"
+  },
   "devDependencies": {
     "blocknote-vue": "workspace:*",
     "nuxt": "^3.10.0",
-    "vue": "^3.4.15",
+    "vue": "^3.4.21",
     "vue-router": "^4.2.5"
   }
 }

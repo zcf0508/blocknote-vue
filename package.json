@@ -71,7 +71,8 @@
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
     "vite-plugin-dts": "^3.7.3",
-    "vue-demi": "^0.14.7"
+    "vue-demi": "^0.14.7",
+    "yjs": "^13.6.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.0",
