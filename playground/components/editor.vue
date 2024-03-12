@@ -9,7 +9,7 @@ const doc = new Y.Doc();
 const provider = new WebsocketProvider('wss://demos.yjs.dev/ws', 'blocknote-demo', doc);
 
 const username = `user${Math.floor(Math.random() * 1000)}`;
-const userColor = computed(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
+const userColor = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
 
 const editorRef = ref<HTMLElement>();
 const { blocknote } = useBlocknote(editorRef, {
@@ -18,7 +18,7 @@ const { blocknote } = useBlocknote(editorRef, {
     fragment: doc.getXmlFragment(),
     user: {
       name: username,
-      color: userColor.value,
+      color: userColor,
     },
   },
 });
